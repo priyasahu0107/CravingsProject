@@ -4,7 +4,7 @@ import { Users, Store, Bike, ShoppingBag, DollarSign, TrendingUp, AlertCircle, C
 import { adminStats } from '../data/dashboardData';
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState<'overview' | 'orders' | 'users' | 'analytics'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'orders' | 'users' | 'analytics' | 'management'>('overview');
 
   const orderStatusData = [
     { name: 'Delivered', value: 1247, color: '#10b981' },
@@ -38,7 +38,7 @@ export default function AdminDashboard() {
 
       {/* Tabs */}
       <div className="flex gap-2 mb-6 border-b border-gray-200 overflow-x-auto">
-        {(['overview', 'orders', 'users', 'analytics'] as const).map(tab => (
+        {(['overview', 'orders', 'users', 'analytics', 'management'] as const).map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -403,6 +403,113 @@ export default function AdminDashboard() {
                 <p className="text-xs text-gray-500 mb-1">Avg Delivery Time</p>
                 <p className="text-xl font-bold text-gray-800">28 min</p>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Management Tab - Admin Only */}
+      {activeTab === 'management' && (
+        <div>
+          <div className="bg-gradient-to-r from-red-500 to-orange-500 rounded-xl p-6 text-white mb-6">
+            <h3 className="text-xl font-bold mb-2">⚙️ Platform Management</h3>
+            <p className="text-red-100">Admin-only controls for platform-wide configuration</p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Pending Approvals */}
+            <div className="bg-white rounded-xl shadow-sm p-5">
+              <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <AlertCircle size={18} className="text-yellow-500" />
+                Pending Approvals
+              </h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
+                  <div>
+                    <p className="font-medium text-gray-800">Restaurant Applications</p>
+                    <p className="text-xs text-gray-500">{adminStats.pendingApprovals.restaurants} awaiting review</p>
+                  </div>
+                  <button className="px-3 py-1.5 bg-yellow-500 text-white text-sm rounded-lg hover:bg-yellow-600">
+                    Review
+                  </button>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                  <div>
+                    <p className="font-medium text-gray-800">Rider Applications</p>
+                    <p className="text-xs text-gray-500">{adminStats.pendingApprovals.riders} awaiting verification</p>
+                  </div>
+                  <button className="px-3 py-1.5 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600">
+                    Review
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Platform Settings */}
+            <div className="bg-white rounded-xl shadow-sm p-5">
+              <h3 className="font-bold text-gray-800 mb-4">Platform Settings</h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div>
+                    <p className="font-medium text-gray-800">Platform Fee</p>
+                    <p className="text-xs text-gray-500">Charged per order</p>
+                  </div>
+                  <span className="font-bold text-gray-800">₹5.00</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div>
+                    <p className="font-medium text-gray-800">Commission Rate</p>
+                    <p className="text-xs text-gray-500">From restaurant earnings</p>
+                  </div>
+                  <span className="font-bold text-gray-800">18%</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div>
+                    <p className="font-medium text-gray-800">Delivery Zones</p>
+                    <p className="text-xs text-gray-500">Active zones</p>
+                  </div>
+                  <span className="font-bold text-gray-800">12</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Coupons & Banners */}
+            <div className="bg-white rounded-xl shadow-sm p-5">
+              <h3 className="font-bold text-gray-800 mb-4">Active Coupons</h3>
+              <div className="space-y-2">
+                {[
+                  { code: 'WELCOME50', discount: '50% OFF', usage: '2,340 / 10,000' },
+                  { code: 'CRAVINGS100', discount: '₹100 OFF', usage: '1,890 / 5,000' },
+                  { code: 'FREEDEL', discount: 'Free Delivery', usage: '4,560 / ∞' },
+                ].map((coupon, idx) => (
+                  <div key={idx} className="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
+                    <div>
+                      <p className="font-mono font-bold text-orange-600">{coupon.code}</p>
+                      <p className="text-xs text-gray-500">{coupon.discount} • {coupon.usage} used</p>
+                    </div>
+                    <button className="text-sm text-gray-500 hover:text-gray-700">Edit</button>
+                  </div>
+                ))}
+              </div>
+              <button className="w-full mt-3 py-2 border border-dashed border-gray-300 rounded-lg text-sm text-gray-500 hover:border-orange-400 hover:text-orange-500">
+                + Create New Coupon
+              </button>
+            </div>
+
+            {/* Categories */}
+            <div className="bg-white rounded-xl shadow-sm p-5">
+              <h3 className="font-bold text-gray-800 mb-4">Food Categories</h3>
+              <div className="grid grid-cols-2 gap-2">
+                {['Pizza', 'Burgers', 'Biryani', 'Chinese', 'Desserts', 'Healthy', 'South Indian', 'Beverages'].map((cat, idx) => (
+                  <div key={idx} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                    <span className="text-sm font-medium text-gray-700">{cat}</span>
+                    <button className="text-xs text-gray-400 hover:text-gray-600">Edit</button>
+                  </div>
+                ))}
+              </div>
+              <button className="w-full mt-3 py-2 border border-dashed border-gray-300 rounded-lg text-sm text-gray-500 hover:border-orange-400 hover:text-orange-500">
+                + Add Category
+              </button>
             </div>
           </div>
         </div>

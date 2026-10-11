@@ -6,7 +6,7 @@ import type { RestaurantOrder } from '../data/dashboardData';
 
 export default function RestaurantDashboard() {
   const [orders, setOrders] = useState(restaurantOrders);
-  const [activeTab, setActiveTab] = useState<'orders' | 'menu' | 'analytics'>('orders');
+  const [activeTab, setActiveTab] = useState<'orders' | 'menu' | 'analytics' | 'reviews' | 'settings'>('orders');
 
   const updateOrderStatus = (id: string, status: RestaurantOrder['status']) => {
     setOrders(prev => prev.map(o => o.id === id ? { ...o, status } : o));
@@ -43,12 +43,12 @@ export default function RestaurantDashboard() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 mb-6 border-b border-gray-200">
-        {(['orders', 'menu', 'analytics'] as const).map(tab => (
+      <div className="flex gap-2 mb-6 border-b border-gray-200 overflow-x-auto">
+        {(['orders', 'menu', 'analytics', 'reviews', 'settings'] as const).map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2.5 text-sm font-medium capitalize transition-colors relative ${
+            className={`px-4 py-2.5 text-sm font-medium capitalize transition-colors relative whitespace-nowrap ${
               activeTab === tab ? 'text-orange-600' : 'text-gray-500 hover:text-gray-700'
             }`}
           >
@@ -300,6 +300,152 @@ export default function RestaurantDashboard() {
                 ))}
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Reviews Tab - Restaurant Only */}
+      {activeTab === 'reviews' && (
+        <div>
+          <div className="bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl p-6 text-white mb-6">
+            <h3 className="text-xl font-bold mb-2">⭐ Customer Reviews</h3>
+            <p className="text-blue-100">What customers say about your restaurant</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div className="bg-white rounded-xl p-5 shadow-sm text-center">
+              <p className="text-4xl font-bold text-gray-800 mb-1">4.5</p>
+              <div className="flex items-center justify-center gap-1 mb-2">
+                {[1, 2, 3, 4, 5].map(star => (
+                  <Star key={star} size={16} className={star <= 4 ? 'text-yellow-400' : 'text-gray-300'} fill="currentColor" />
+                ))}
+              </div>
+              <p className="text-sm text-gray-500">2,340 reviews</p>
+            </div>
+            <div className="bg-white rounded-xl p-5 shadow-sm">
+              <p className="text-sm text-gray-500 mb-2">Food Quality</p>
+              <p className="text-2xl font-bold text-gray-800">4.6/5</p>
+            </div>
+            <div className="bg-white rounded-xl p-5 shadow-sm">
+              <p className="text-sm text-gray-500 mb-2">Delivery Speed</p>
+              <p className="text-2xl font-bold text-gray-800">4.3/5</p>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-sm">
+            <div className="p-5 border-b border-gray-100">
+              <h3 className="font-bold text-gray-800">Recent Reviews</h3>
+            </div>
+            <div className="divide-y divide-gray-100">
+              {[
+                { name: 'Priya S.', rating: 5, comment: 'Amazing biryani! Best I have had in Bangalore. Will order again.', time: '2 hours ago' },
+                { name: 'Rahul V.', rating: 4, comment: 'Good food but delivery took a bit long. Taste was excellent though.', time: '5 hours ago' },
+                { name: 'Anita D.', rating: 5, comment: 'Butter chicken is to die for! Perfectly cooked and flavorful.', time: '1 day ago' },
+                { name: 'Vikram S.', rating: 4, comment: 'Great taste and portion size. Naan could be fresher.', time: '2 days ago' },
+              ].map((review, idx) => (
+                <div key={idx} className="p-5">
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center font-bold text-blue-600">
+                        {review.name[0]}
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-800">{review.name}</p>
+                        <div className="flex items-center gap-1">
+                          {[1, 2, 3, 4, 5].map(star => (
+                            <Star key={star} size={12} className={star <= review.rating ? 'text-yellow-400' : 'text-gray-300'} fill="currentColor" />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <span className="text-xs text-gray-400">{review.time}</span>
+                  </div>
+                  <p className="text-sm text-gray-600 ml-13">{review.comment}</p>
+                  <button className="mt-2 text-sm text-orange-500 hover:underline ml-13">Reply</button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Settings Tab - Restaurant Only */}
+      {activeTab === 'settings' && (
+        <div>
+          <div className="bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl p-6 text-white mb-6">
+            <h3 className="text-xl font-bold mb-2">🏪 Restaurant Settings</h3>
+            <p className="text-green-100">Manage your restaurant profile and preferences</p>
+          </div>
+
+          <div className="space-y-6">
+            {/* Basic Info */}
+            <div className="bg-white rounded-xl shadow-sm p-5">
+              <h3 className="font-bold text-gray-800 mb-4">Basic Information</h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm text-gray-600 mb-1 block">Restaurant Name</label>
+                  <input type="text" defaultValue="The Spice Route" className="w-full px-3 py-2 border border-gray-200 rounded-lg" />
+                </div>
+                <div>
+                  <label className="text-sm text-gray-600 mb-1 block">Description</label>
+                  <textarea defaultValue="Authentic North Indian flavors with a modern twist..." className="w-full px-3 py-2 border border-gray-200 rounded-lg" rows={3} />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm text-gray-600 mb-1 block">Phone</label>
+                    <input type="text" defaultValue="+91 98765 43210" className="w-full px-3 py-2 border border-gray-200 rounded-lg" />
+                  </div>
+                  <div>
+                    <label className="text-sm text-gray-600 mb-1 block">Email</label>
+                    <input type="email" defaultValue="spiceroute@example.com" className="w-full px-3 py-2 border border-gray-200 rounded-lg" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Operating Hours */}
+            <div className="bg-white rounded-xl shadow-sm p-5">
+              <h3 className="font-bold text-gray-800 mb-4">Operating Hours</h3>
+              <div className="space-y-2">
+                {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day, idx) => (
+                  <div key={idx} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                    <span className="font-medium text-gray-700">{day}</span>
+                    <div className="flex items-center gap-2">
+                      <input type="time" defaultValue="10:00" className="px-2 py-1 border border-gray-200 rounded text-sm" />
+                      <span className="text-gray-400">to</span>
+                      <input type="time" defaultValue="22:00" className="px-2 py-1 border border-gray-200 rounded text-sm" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Delivery Settings */}
+            <div className="bg-white rounded-xl shadow-sm p-5">
+              <h3 className="font-bold text-gray-800 mb-4">Delivery Settings</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm text-gray-600 mb-1 block">Delivery Radius (km)</label>
+                  <input type="number" defaultValue="5" className="w-full px-3 py-2 border border-gray-200 rounded-lg" />
+                </div>
+                <div>
+                  <label className="text-sm text-gray-600 mb-1 block">Minimum Order (₹)</label>
+                  <input type="number" defaultValue="149" className="w-full px-3 py-2 border border-gray-200 rounded-lg" />
+                </div>
+                <div>
+                  <label className="text-sm text-gray-600 mb-1 block">Delivery Fee (₹)</label>
+                  <input type="number" defaultValue="29" className="w-full px-3 py-2 border border-gray-200 rounded-lg" />
+                </div>
+                <div>
+                  <label className="text-sm text-gray-600 mb-1 block">Prep Time (min)</label>
+                  <input type="number" defaultValue="20" className="w-full px-3 py-2 border border-gray-200 rounded-lg" />
+                </div>
+              </div>
+            </div>
+
+            <button className="w-full py-3 bg-orange-500 text-white font-bold rounded-xl hover:bg-orange-600 transition-colors">
+              Save Changes
+            </button>
           </div>
         </div>
       )}

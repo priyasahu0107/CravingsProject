@@ -70,14 +70,20 @@ Cravings platform mein **4 distinct roles** hain:
 - View order history
 
 ### 3.2 Restaurant
-**Access:** Restaurant Dashboard
+**Access:** Restaurant Dashboard (Single Restaurant Scope)
+**Scope:** Only their own restaurant data
 **Capabilities:**
-- View incoming orders in real-time
-- Accept/Reject orders
+- View incoming orders for their restaurant only
+- Accept/Reject orders for their restaurant
 - Update order status (Preparing → Ready)
-- Manage menu items (add/edit/toggle availability)
-- View sales analytics (daily/weekly/monthly)
-- Track revenue and top-selling items
+- Manage their restaurant's menu items (add/edit/toggle availability)
+- View their restaurant's sales analytics (daily/weekly/monthly)
+- Track their restaurant's revenue and top-selling items
+- Update restaurant profile (hours, description, images)
+- View customer reviews for their restaurant
+- Manage restaurant-specific offers/coupons
+
+**Key Difference:** Restaurant can ONLY see and manage their OWN restaurant's data, not the entire platform.
 
 ### 3.3 Rider
 **Access:** Rider Dashboard
@@ -91,15 +97,45 @@ Cravings platform mein **4 distinct roles** hain:
 - Contact customer/restaurant
 
 ### 3.4 Admin
-**Access:** Admin Dashboard
+**Access:** Admin Dashboard (Platform-Wide Scope)
+**Scope:** Entire platform - ALL restaurants, riders, customers, orders
 **Capabilities:**
-- View platform-wide statistics
-- Monitor all orders across the platform
-- Manage users (customers, restaurants, riders)
-- View revenue trends and analytics
-- Approve/reject restaurant and rider applications
-- Manage coupons, banners, categories
-- Track platform performance metrics
+- View platform-wide statistics (total customers, restaurants, riders)
+- Monitor ALL orders across ALL restaurants on the platform
+- Manage ALL users (customers, restaurants, riders) - suspend, activate, delete
+- View platform-wide revenue trends and analytics
+- Approve/reject new restaurant and rider applications
+- Manage platform-level coupons, banners, categories
+- Track platform performance metrics (delivery times, success rates)
+- Handle disputes and refunds
+- Configure delivery zones and fees
+- View and manage all payments and payouts
+- Generate platform reports
+
+**Key Difference:** Admin has FULL ACCESS to the entire platform and can manage all restaurants, riders, and customers. They see aggregated data from all restaurants, not just one.
+
+---
+
+## 3.5 Restaurant vs Admin - Key Differences
+
+| Feature | Restaurant Dashboard | Admin Dashboard |
+|---------|---------------------|-----------------|
+| **Scope** | Single Restaurant Only | Entire Platform (All Restaurants) |
+| **Orders Visibility** | Only their restaurant's orders | ALL orders from ALL restaurants |
+| **Menu Management** | ✅ Only their own menu | ❌ No menu management (restaurants manage their own) |
+| **Analytics** | Their restaurant's performance only | Platform-wide aggregated analytics |
+| **User Management** | ❌ Cannot manage users | ✅ Can manage ALL users (customers, restaurants, riders) |
+| **Approvals** | ❌ Cannot approve anyone | ✅ Approve/reject new restaurants and riders |
+| **Revenue View** | Their restaurant's revenue only | Total platform revenue from all restaurants |
+| **Reviews** | ✅ View and reply to their reviews | ❌ Cannot see individual reviews |
+| **Settings** | ✅ Restaurant profile, hours, delivery settings | ✅ Platform fees, delivery zones, categories, banners, coupons |
+| **Access Level** | Limited to their own business | Full platform administration |
+| **Data Aggregation** | Single entity data | Multi-entity aggregated data |
+| **Tabs** | Orders, Menu, Analytics, Reviews, Settings | Overview, Orders, Users, Analytics, Management |
+
+**Example:**
+- **Restaurant Owner** sees: "My restaurant got 47 orders today, earned ₹18,420"
+- **Admin** sees: "Platform has 342 restaurants, 1,847 orders today, ₹4,87,620 total revenue"
 
 ---
 
@@ -228,21 +264,36 @@ Cravings platform mein **4 distinct roles** hain:
 - **Empty State:** No results found message
 
 ### 6.7 Restaurant Dashboard
+**Scope:** Single Restaurant - Only their own restaurant's data
 **Tabs:**
 - **Orders Tab:**
-  - Stats cards (New Orders, Preparing, Revenue, Total)
-  - Order cards with status badges
+  - Stats cards (New Orders, Preparing, Today's Revenue, Total Orders) - **Only their restaurant**
+  - Order cards with status badges - **Only orders for their restaurant**
   - Action buttons (Accept, Reject, Start Preparing, Mark Ready)
-  - Real-time status updates
+  - Real-time status updates for their orders
+  - Customer details for their orders
 - **Menu Tab:**
-  - Menu item list with availability toggle
+  - Menu item list with availability toggle - **Only their menu items**
   - Edit buttons for each item
   - Add new item button
+  - Category management for their menu
 - **Analytics Tab:**
-  - KPI cards (Avg Prep Time, Rating, Orders, Revenue)
-  - Weekly Orders bar chart
-  - Weekly Revenue line chart
-  - Top Selling Items ranking
+  - KPI cards (Avg Prep Time, Rating, Orders, Revenue) - **Only their restaurant's metrics**
+  - Weekly Orders bar chart - **Only their restaurant's orders**
+  - Weekly Revenue line chart - **Only their restaurant's revenue**
+  - Top Selling Items ranking - **Only their restaurant's items**
+- **Reviews Tab:** ⭐ **NEW**
+  - Customer reviews for their restaurant only
+  - Reply to reviews
+  - Average rating display (overall, food quality, delivery speed)
+  - Recent reviews list with ratings and comments
+- **Settings Tab:** ⭐ **NEW**
+  - Basic Information (name, description, phone, email)
+  - Operating Hours (daily schedule)
+  - Delivery Settings (radius, minimum order, delivery fee, prep time)
+  - Save changes functionality
+
+**Key Point:** Restaurant owner can ONLY see their own restaurant's orders, menu, analytics, reviews, and settings. They cannot see other restaurants' data or platform-wide statistics.
 
 ### 6.8 Rider Dashboard
 **Tabs:**
@@ -259,23 +310,39 @@ Cravings platform mein **4 distinct roles** hain:
   - Weekly earnings bar chart
 
 ### 6.9 Admin Dashboard
+**Scope:** Platform-Wide - ALL data from ALL restaurants, riders, customers
 **Tabs:**
 - **Overview Tab:**
-  - 5 KPI cards (Customers, Restaurants, Riders, Orders, Revenue)
-  - Revenue trend area chart
-  - Order status pie chart
-  - Recent orders table
+  - 5 KPI cards (Total Customers, Total Restaurants, Total Riders, All Orders, Platform Revenue) - **Aggregated from entire platform**
+  - Revenue trend area chart - **Platform-wide revenue from all restaurants**
+  - Order status pie chart - **All orders across all restaurants**
+  - Recent orders table - **Orders from all restaurants**
+  - Pending approvals (restaurants, riders) - **Platform-level approvals**
 - **Orders Tab:**
-  - Full orders table with filters
+  - Full orders table with filters - **ALL orders from ALL restaurants**
+  - Filter by restaurant, status, date range
   - Status badges
   - View details action
+  - Handle disputes and refunds
 - **Users Tab:**
-  - Customer/Restaurant/Rider counts
-  - Top restaurants ranking
+  - Customer/Restaurant/Rider counts - **Total platform users**
+  - Top restaurants ranking - **Compare all restaurants on platform**
+  - Manage users (suspend, activate, delete)
+  - Approve/reject new restaurant and rider applications
 - **Analytics Tab:**
-  - Monthly orders area chart
-  - Monthly revenue area chart
-  - Platform performance metrics
+  - Monthly orders area chart - **Platform-wide order trends**
+  - Monthly revenue area chart - **Total platform revenue**
+  - Platform performance metrics (avg delivery time, success rate, cancellation rate)
+  - Compare restaurant performance
+  - Rider performance analytics
+- **Management Tab:** ⭐ **NEW - Admin Only**
+  - Pending Approvals (restaurants and riders awaiting review)
+  - Platform Settings (platform fee, commission rate, delivery zones)
+  - Active Coupons management (create, edit, view usage)
+  - Food Categories management (add, edit categories)
+  - Platform-wide configuration controls
+
+**Key Point:** Admin has COMPLETE ACCESS to the entire platform. They can see data from ALL restaurants, manage ALL users, and configure platform-wide settings. This is fundamentally different from Restaurant dashboard which is limited to a single restaurant.
 
 ---
 
