@@ -1,19 +1,55 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, Search, MapPin, User, Menu, X } from 'lucide-react';
+import { ShoppingCart, Search, MapPin, User, Menu, X, ChevronDown, Store, Bike, Shield } from 'lucide-react';
 import { useState } from 'react';
 import { useCartStore } from '../store/cartStore';
+import { useAuthStore } from '../store/authStore';
+import type { UserRole } from '../store/authStore';
 
 export default function Layout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
   const totalItems = useCartStore(state => state.getTotalItems());
   const location = useLocation();
+  const { role, setRole } = useAuthStore();
 
-  const navLinks = [
-    { path: '/', label: 'Home' },
-    { path: '/restaurants', label: 'Restaurants' },
-    { path: '/order-tracking', label: 'Track Order' },
-  ];
+  const roleConfig: Record<UserRole, { label: string; icon: React.ReactNode; path: string; color: string }> = {
+    customer: { label: 'Customer', icon: <User size={14} />, path: '/', color: 'bg-orange-500' },
+    restaurant: { label: 'Restaurant', icon: <Store size={14} />, path: '/restaurant/dashboard', color: 'bg-blue-500' },
+    rider: { label: 'Rider', icon: <Bike size={14} />, path: '/rider/dashboard', color: 'bg-purple-500' },
+    admin: { label: 'Admin', icon: <Shield size={14} />, path: '/admin/dashboard', color: 'bg-red-500' },
+  };
+
+  const handleRoleChange = (newRole: UserRole) => {
+    setRole(newRole);
+    setRoleDropdownOpen(false);
+  };
+
+  // Determine nav links based on role
+  const getNavLinks = () => {
+    switch (role) {
+      case 'customer':
+        return [
+          { path: '/', label: 'Home' },
+          { path: '/restaurants', label: 'Restaurants' },
+          { path: '/order-tracking', label: 'Track Order' },
+        ];
+      case 'restaurant':
+        return [
+          { path: '/restaurant/dashboard', label: 'Dashboard' },
+        ];
+      case 'rider':
+        return [
+          { path: '/rider/dashboard', label: 'Dashboard' },
+        ];
+      case 'admin':
+        return [
+          { path: '/admin/dashboard', label: 'Dashboard' },
+        ];
+    }
+  };
+
+  const navLinks = getNavLinks();
+  const currentRole = roleConfig[role];
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -47,28 +83,69 @@ export default function Layout() {
             </nav>
 
             {/* Right Section */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
+              {/* Role Switcher */}
+              <div className="relative">
+                <button
+                  onClick={() => setRoleDropdownOpen(!roleDropdownOpen)}
+                  className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium text-white transition-colors hover:opacity-90"
+                  style={{ backgroundColor: role === 'customer' ? '#f97316' : role === 'restaurant' ? '#3b82f6' : role === 'rider' ? '#8b5cf6' : '#ef4444' }}
+                >
+                  {currentRole.icon}
+                  <span className="hidden sm:inline">{currentRole.label}</span>
+                  <ChevronDown size={14} className={`transition-transform ${roleDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {roleDropdownOpen && (
+                  <>
+                    <div className="fixed inset-0 z-10" onClick={() => setRoleDropdownOpen(false)} />
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-20">
+                      <p className="px-3 py-1.5 text-xs text-gray-400 font-medium uppercase">Switch Role</p>
+                      {(Object.keys(roleConfig) as UserRole[]).map(r => (
+                        <button
+                          key={r}
+                          onClick={() => handleRoleChange(r)}
+                          className={`w-full flex items-center gap-2.5 px-3 py-2.5 text-sm hover:bg-gray-50 transition-colors ${
+                            role === r ? 'bg-orange-50 text-orange-600 font-medium' : 'text-gray-700'
+                          }`}
+                        >
+                          <span className={`w-6 h-6 rounded-full flex items-center justify-center text-white ${roleConfig[r].color}`}>
+                            {roleConfig[r].icon}
+                          </span>
+                          {roleConfig[r].label}
+                          {role === r && <span className="ml-auto text-xs">✓</span>}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+
               {/* Location */}
               <div className="hidden lg:flex items-center gap-1 text-sm text-gray-600">
                 <MapPin size={16} className="text-orange-500" />
                 <span>Bangalore</span>
               </div>
 
-              {/* Search */}
-              <Link to="/search" className="hidden sm:flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-full text-sm text-gray-500 hover:bg-gray-200 transition-colors">
-                <Search size={16} />
-                <span className="hidden md:inline">Search food...</span>
-              </Link>
+              {/* Search (Customer only) */}
+              {role === 'customer' && (
+                <Link to="/search" className="hidden sm:flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-full text-sm text-gray-500 hover:bg-gray-200 transition-colors">
+                  <Search size={16} />
+                  <span className="hidden md:inline">Search food...</span>
+                </Link>
+              )}
 
-              {/* Cart */}
-              <Link to="/cart" className="relative p-2 rounded-full hover:bg-orange-50 transition-colors">
-                <ShoppingCart size={22} className="text-gray-700" />
-                {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-orange-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
-                    {totalItems}
-                  </span>
-                )}
-              </Link>
+              {/* Cart (Customer only) */}
+              {role === 'customer' && (
+                <Link to="/cart" className="relative p-2 rounded-full hover:bg-orange-50 transition-colors">
+                  <ShoppingCart size={22} className="text-gray-700" />
+                  {totalItems > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-orange-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                      {totalItems}
+                    </span>
+                  )}
+                </Link>
+              )}
 
               {/* User */}
               <button className="hidden md:flex p-2 rounded-full hover:bg-orange-50 transition-colors">
@@ -104,14 +181,44 @@ export default function Layout() {
                   {link.label}
                 </Link>
               ))}
-              <Link
-                to="/search"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600"
-              >
-                <Search size={16} />
-                Search food
-              </Link>
+              {role === 'customer' && (
+                <>
+                  <Link
+                    to="/search"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600"
+                  >
+                    <Search size={16} />
+                    Search food
+                  </Link>
+                  <Link
+                    to="/cart"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600"
+                  >
+                    <ShoppingCart size={16} />
+                    Cart {totalItems > 0 && `(${totalItems})`}
+                  </Link>
+                </>
+              )}
+              <div className="pt-2 border-t border-gray-100">
+                <p className="px-3 py-1 text-xs text-gray-400 font-medium uppercase">Switch Role</p>
+                {(Object.keys(roleConfig) as UserRole[]).map(r => (
+                  <button
+                    key={r}
+                    onClick={() => {
+                      handleRoleChange(r);
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg ${
+                      role === r ? 'bg-orange-50 text-orange-600 font-medium' : 'text-gray-600'
+                    }`}
+                  >
+                    {roleConfig[r].icon}
+                    {roleConfig[r].label}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         )}
@@ -154,14 +261,14 @@ export default function Layout() {
             <div>
               <h4 className="font-semibold mb-3">Partner With Us</h4>
               <ul className="space-y-2 text-sm text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Register Restaurant</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Become a Rider</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Business Account</a></li>
+                <li><Link to="/restaurant/dashboard" className="hover:text-white transition-colors">Register Restaurant</Link></li>
+                <li><Link to="/rider/dashboard" className="hover:text-white transition-colors">Become a Rider</Link></li>
+                <li><Link to="/admin/dashboard" className="hover:text-white transition-colors">Admin Panel</Link></li>
               </ul>
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
-            © 2026 Cravings. All rights reserved.
+            © 2026 Cravings. All rights reserved. Built with MERN Stack.
           </div>
         </div>
       </footer>
