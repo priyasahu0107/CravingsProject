@@ -18,17 +18,35 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 
 // Customer Pages
-import Cart from './pages/Cart';
-import OrderTracking from './pages/OrderTracking';
-import OrderHistory from './pages/OrderHistory';
-import Favourites from './pages/Favourites';
-import Addresses from './pages/Addresses';
-import Profile from './pages/Profile';
+import CustomerDashboard from './pages/customer/Dashboard';
+import Cart from './pages/customer/Cart';
+import Checkout from './pages/customer/Checkout';
+import OrderHistory from './pages/customer/OrderHistory';
+import OrderTracking from './pages/customer/OrderTracking';
+import Favourites from './pages/customer/Favourites';
+import Addresses from './pages/customer/Addresses';
+import Profile from './pages/customer/Profile';
 
-// Role Dashboards
-import RestaurantDashboard from './pages/RestaurantDashboard';
-import RiderDashboard from './pages/RiderDashboard';
-import AdminDashboard from './pages/AdminDashboard';
+// Restaurant Pages
+import RestaurantDashboard from './pages/restaurant/Dashboard';
+import RestaurantOrders from './pages/restaurant/Orders';
+import RestaurantMenu from './pages/restaurant/Menu';
+import RestaurantAnalytics from './pages/restaurant/Analytics';
+import RestaurantSettings from './pages/restaurant/Settings';
+
+// Rider Pages
+import RiderDashboard from './pages/rider/Dashboard';
+import RiderDeliveries from './pages/rider/Deliveries';
+import RiderEarnings from './pages/rider/Earnings';
+import RiderProfile from './pages/rider/Profile';
+
+// Admin Pages
+import AdminDashboard from './pages/admin/Dashboard';
+import AdminUsers from './pages/admin/Users';
+import AdminRestaurants from './pages/admin/Restaurants';
+import AdminRiders from './pages/admin/Riders';
+import AdminOrders from './pages/admin/Orders';
+import AdminAnalytics from './pages/admin/Analytics';
 
 // Protected Route Component
 const ProtectedRoute = ({ children, allowedRoles }: { children: React.ReactNode; allowedRoles: string[] }) => {
@@ -65,9 +83,11 @@ function App() {
             <CustomerLayout />
           </ProtectedRoute>
         }>
+          <Route path="/customer/dashboard" element={<CustomerDashboard />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/order-tracking" element={<OrderTracking />} />
+          <Route path="/checkout" element={<Checkout />} />
           <Route path="/orders" element={<OrderHistory />} />
+          <Route path="/orders/:id/tracking" element={<OrderTracking />} />
           <Route path="/favourites" element={<Favourites />} />
           <Route path="/addresses" element={<Addresses />} />
           <Route path="/profile" element={<Profile />} />
@@ -80,6 +100,10 @@ function App() {
           </ProtectedRoute>
         }>
           <Route path="/restaurant/dashboard" element={<RestaurantDashboard />} />
+          <Route path="/restaurant/orders" element={<RestaurantOrders />} />
+          <Route path="/restaurant/menu" element={<RestaurantMenu />} />
+          <Route path="/restaurant/analytics" element={<RestaurantAnalytics />} />
+          <Route path="/restaurant/settings" element={<RestaurantSettings />} />
         </Route>
 
         {/* Rider Routes */}
@@ -89,6 +113,9 @@ function App() {
           </ProtectedRoute>
         }>
           <Route path="/rider/dashboard" element={<RiderDashboard />} />
+          <Route path="/rider/deliveries" element={<RiderDeliveries />} />
+          <Route path="/rider/earnings" element={<RiderEarnings />} />
+          <Route path="/rider/profile" element={<RiderProfile />} />
         </Route>
 
         {/* Admin Routes */}
@@ -98,6 +125,11 @@ function App() {
           </ProtectedRoute>
         }>
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/users" element={<AdminUsers />} />
+          <Route path="/admin/restaurants" element={<AdminRestaurants />} />
+          <Route path="/admin/riders" element={<AdminRiders />} />
+          <Route path="/admin/orders" element={<AdminOrders />} />
+          <Route path="/admin/analytics" element={<AdminAnalytics />} />
         </Route>
 
         {/* Unauthorized Page */}

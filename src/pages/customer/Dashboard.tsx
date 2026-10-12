@@ -1,17 +1,50 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingBag, Clock, TrendingUp } from 'lucide-react';
-import { useOrderStore } from '../../store/orderStore';
+import { ShoppingBag, Clock, TrendingUp, Heart, MapPin, User } from 'lucide-react';
+import { api } from '../../services/api';
+import { useAuthStore } from '../../store/authStore';
+
+interface Order {
+  id: string;
+  orderNumber: string;
+  restaurantName: string;
+  total: number;
+  status: string;
+  createdAt: string;
+}
 
 export default function CustomerDashboard() {
-  const orders = useOrderStore(state => state.orders);
+  const { user } = useAuthStore();
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  const fetchOrders = async () => {
+    try {
+      setLoading(true);
+      const response = await api.getOrders();
+      if (response.success && response.data) {
+        setOrders((response.data as any).orders || []);
+      }
+    } catch (err) {
+      setError('Failed to load orders');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const recentOrders = orders.slice(0, 3);
   const activeOrders = orders.filter(o => !['delivered', 'cancelled'].includes(o.status));
+  const totalSpent = orders.reduce((sum, o) => sum + (o.total || 0), 0);
 
   return (
     <div className="max-w-6xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">Welcome Back!</h1>
+        <h1 className="text-3xl font-bold text-gray-800">Welcome Back, {user?.name || 'User'}!</h1>
         <p className="text-gray-500">Here's what's happening with your orders</p>
       </div>
 
@@ -42,9 +75,7 @@ export default function CustomerDashboard() {
             </div>
             <span className="text-sm text-gray-500">Total Spent</span>
           </div>
-          <p className="text-2xl font-bold text-gray-800">
-            ₹{orders.reduce((sum, o) => sum + o.total, 0).toLocaleString()}
-          </p>
+          <p className="text-2xl font-bold text-gray-800">₹{totalSpent.toLocaleString()}</p>
         </div>
       </div>
 
@@ -78,21 +109,35 @@ export default function CustomerDashboard() {
           <h2 className="text-lg font-bold text-gray-800">Recent Orders</h2>
           <Link to="/orders" className="text-sm text-orange-500 hover:underline">View All</Link>
         </div>
-        {recentOrders.length === 0 ? (
+
+        {loading ? (
+          <div className="text-center py-8">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+            <p className="text-gray-500">Loading orders...</p>
+          </div>
+        ) : error ? (
+          <div className="text-center py-8">
+            <p className="text-4xl mb-3">⚠️</p>
+            <p className="text-gray-500 mb-3">{error}</p>
+            <button onClick={fetchOrders} className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600">
+              Retry
+            </button>
+          </div>
+        ) : recentOrders.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-4xl mb-3">📭</p>
-            <p className="text-gray-500">No orders yet. Start ordering!</p>
-            <Link to="/" className="inline-block mt-3 px-4 py-2 bg-orange-500 text-white rounded-lg text-sm hover:bg-orange-600">
+            <p className="text-gray-500 mb-3">No orders yet. Start ordering!</p>
+            <Link to="/" className="inline-block px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600">
               Browse Restaurants
             </Link>
           </div>
         ) : (
           <div className="space-y-3">
             {recentOrders.map(order => (
-              <div key={order.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div key={order.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                 <div>
                   <p className="font-medium text-gray-800">#{order.orderNumber}</p>
-                  <p className="text-sm text-gray-500">{order.restaurantName}</p>
+                  <p className="text-sm text-gray-500">{order.restaurantName || 'Restaurant'}</p>
                 </div>
                 <div className="text-right">
                   <p className="font-bold text-gray-800">₹{order.total}</p>
