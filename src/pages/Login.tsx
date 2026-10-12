@@ -95,9 +95,11 @@ export default function Login() {
           </div>
 
           <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-            <p className="text-xs text-gray-500 mb-2">Demo Credentials:</p>
-            <p className="text-xs text-gray-600 font-mono">Email: demo@cravings.app</p>
-            <p className="text-xs text-gray-600 font-mono">Password: demo123</p>
+            <p className="text-xs text-gray-500 mb-2">Demo Credentials (requires backend):</p>
+            <p className="text-xs text-gray-600 font-mono">Customer: demo@cravings.app / demo123</p>
+            <p className="text-xs text-gray-600 font-mono">Admin: admin@cravings.app / admin123</p>
+            <p className="text-xs text-gray-600 font-mono">Restaurant: restaurant@cravings.app / restaurant123</p>
+            <p className="text-xs text-gray-600 font-mono">Rider: rider@cravings.app / rider123</p>
           </div>
         </div>
       </div>
