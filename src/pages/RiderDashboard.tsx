@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Bike, MapPin, Phone, MessageCircle, CheckCircle, XCircle, Wallet, Star, TrendingUp, Clock, Navigation, Package, ShieldCheck } from 'lucide-react';
 import { riderRequests, riderStats } from '../data/dashboardData';

@@ -1,7 +1,7 @@
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Star, Clock, Filter, SlidersHorizontal } from 'lucide-react';
 import { restaurants } from '../data/mockData';
-import { useState } from 'react';
 
 export default function Restaurants() {
   const [sortBy, setSortBy] = useState('rating');

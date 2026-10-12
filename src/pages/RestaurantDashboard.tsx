@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { Check, X, Clock, ChefHat, Package, TrendingUp, DollarSign, Star, Timer } from 'lucide-react';
 import { restaurantOrders, restaurantAnalytics } from '../data/dashboardData';

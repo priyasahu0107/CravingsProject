@@ -1,7 +1,7 @@
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Phone, MessageCircle, MapPin, Clock, CheckCircle2, Circle, Bike } from 'lucide-react';
 import { mockOrderStatuses } from '../data/mockData';
-import { useState, useEffect } from 'react';
 
 export default function OrderTracking() {
   const [statuses, setStatuses] = useState(mockOrderStatuses);

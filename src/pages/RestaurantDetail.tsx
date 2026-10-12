@@ -1,8 +1,8 @@
+import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Star, Clock, MapPin, ArrowLeft, Plus, Minus, ShoppingBag, Leaf, Egg, Drumstick } from 'lucide-react';
 import { restaurants } from '../data/mockData';
 import { useCartStore } from '../store/cartStore';
-import { useState } from 'react';
 
 export default function RestaurantDetail() {
   const { id } = useParams();

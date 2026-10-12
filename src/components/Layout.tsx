@@ -1,6 +1,6 @@
+import React, { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { ShoppingCart, Search, MapPin, User, Menu, X, ChevronDown, Store, Bike, Shield } from 'lucide-react';
-import { useState } from 'react';
 import { useCartStore } from '../store/cartStore';
 import { useAuthStore } from '../store/authStore';
 import type { UserRole } from '../store/authStore';

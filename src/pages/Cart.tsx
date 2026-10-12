@@ -1,7 +1,7 @@
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Minus, Plus, Trash2, ArrowLeft, Tag, ShoppingBag } from 'lucide-react';
 import { useCartStore } from '../store/cartStore';
-import { useState } from 'react';
 
 export default function Cart() {
   const items = useCartStore(state => state.items);

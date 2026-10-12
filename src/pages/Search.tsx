@@ -1,7 +1,7 @@
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Search, Star, Clock, X } from 'lucide-react';
 import { restaurants } from '../data/mockData';
-import { useState, useEffect, useMemo } from 'react';
 
 export default function SearchPage() {
   const [searchParams] = useSearchParams();

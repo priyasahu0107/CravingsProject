@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { Users, Store, Bike, ShoppingBag, DollarSign, TrendingUp, AlertCircle, CheckCircle2, Clock, BarChart3, Activity } from 'lucide-react';
 import { adminStats } from '../data/dashboardData';

@@ -1,7 +1,7 @@
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Star, Clock, ChevronRight, Truck, Shield, Zap } from 'lucide-react';
 import { restaurants, categories, banners } from '../data/mockData';
-import { useState, useEffect } from 'react';
 
 export default function Home() {
   const [currentBanner, setCurrentBanner] = useState(0);
