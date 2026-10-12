@@ -4,6 +4,7 @@ import SidebarLayout from './SidebarLayout';
 
 export default function CustomerLayout() {
   const navItems = [
+    { path: '/customer/dashboard', label: 'Dashboard', icon: <Home size={18} /> },
     { path: '/', label: 'Browse Restaurants', icon: <Home size={18} /> },
     { path: '/orders', label: 'My Orders', icon: <ClipboardList size={18} /> },
     { path: '/favourites', label: 'Favourites', icon: <Heart size={18} /> },
