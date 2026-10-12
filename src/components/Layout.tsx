@@ -25,13 +25,14 @@ export default function Layout() {
   };
 
   // Determine nav links based on role
-  const getNavLinks = () => {
+  const navLinks = (() => {
     switch (role) {
       case 'customer':
         return [
           { path: '/', label: 'Home' },
           { path: '/restaurants', label: 'Restaurants' },
-          { path: '/order-tracking', label: 'Track Order' },
+          { path: '/orders', label: 'Orders' },
+          { path: '/favourites', label: 'Favourites' },
         ];
       case 'restaurant':
         return [
@@ -45,10 +46,15 @@ export default function Layout() {
         return [
           { path: '/admin/dashboard', label: 'Dashboard' },
         ];
+      default:
+        return [
+          { path: '/', label: 'Home' },
+          { path: '/restaurants', label: 'Restaurants' },
+          { path: '/orders', label: 'Orders' },
+          { path: '/favourites', label: 'Favourites' },
+        ];
     }
-  };
-
-  const navLinks = getNavLinks();
+  })();
   const currentRole = roleConfig[role];
 
   return (
